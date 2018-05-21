@@ -56,6 +56,10 @@ class Gallery extends React.Component {
     this.getImages(props.tag);
   }
 
+  handleDelete(dto) {
+    this.setState({ images: this.state.images.filter((val) => val.id !== dto.id) });
+  }
+
   render() {
     return (
       <div className="gallery-root">

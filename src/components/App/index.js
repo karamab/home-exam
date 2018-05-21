@@ -1,3 +1,3 @@
-import App from './App';
+import Gallery from './Gallery';
 
-export default App;
+export default Gallery;

@@ -23,7 +23,8 @@ class Image extends React.Component {
     const imagesPerRow = Math.round(galleryWidth / targetSize);
     const size = (galleryWidth / imagesPerRow);
     this.setState({
-      size
+      size: size,
+      rotate: this.state.rotate ? this.state.rotate : 0
     });
   }
 
@@ -35,20 +36,45 @@ class Image extends React.Component {
     return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
   }
 
+  imageDelete() {
+    console.log('image');
+    this.props.deleteImage(this.props.dto);
+  }
+
+  rotate() {
+    if (!this.state.rotate) this.setState({ rotate: 90 });
+    else {
+      this.setState({ rotate: (this.state.rotate + 90) % 360 })
+    }
+    console.log(this.state);
+  }
+
+  expand() {
+    this.setState({ fullscreen: !this.state.fullscreen });
+    console.log(this.state.fullscreen);
+  }
+
+  _checkIsFullScreen() {
+    return this.state.fullscreen ? 'image-root fullscreen': 'image-root';
+  }
+
+
   render() {
     return (
       <div
-        className="image-root"
+        ref="image"
+        className={this._checkIsFullScreen()}
         style={{
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.state.size + 'px',
-          height: this.state.size + 'px'
+          height: this.state.size + 'px',
+          transform: `rotate(${this.state.rotate}deg)`
         }}
-        >
+      >
         <div>
-          <FontAwesome className="image-icon" name="sync-alt" title="rotate"/>
-          <FontAwesome className="image-icon" name="trash-alt" title="delete"/>
-          <FontAwesome className="image-icon" name="expand" title="expand"/>
+          <FontAwesome className="image-icon" name="sync-alt" title="rotate" onClick={this.rotate.bind(this)} />
+          <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={this.imageDelete.bind(this)} />
+          <FontAwesome className="image-icon" name="expand" title="expand" onClick={this.expand.bind(this)} />
         </div>
       </div>
     );
